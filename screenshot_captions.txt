@@ -1,0 +1,43 @@
+EXAMGUARD SCREENSHOT CAPTIONS AND DESCRIPTIONS
+
+Figure 1 — ExamGuard sign-in page
+Description: This screen provides a secure entry point for both examiners and students. Users enter their email address and password to access the role-based examination workspace; new students can follow the account-creation link.
+
+Figure 2 — Student account registration page
+Description: This page enables a new student to create an account. It collects the student's name, matric number, department, optional level, email address, and password, allowing the system to identify the student and show department-specific examinations.
+
+Figure 3 — Examiner operations dashboard
+Description: This is the examiner's main dashboard. It summarises total students, examinations, flagged students, and logged violations, and presents assessment-activity and risk-distribution charts for a quick view of examination performance and integrity signals.
+
+Figure 4 — Examiner examination management page
+Description: This page lists examinations created by the examiner and shows each exam's course, duration, schedule, and current status. It also displays the monitoring-points policy and provides controls to create an exam or review student results.
+
+Figure 5.1 — New objective examination form: exam details
+Description: This is the first section of the exam-creation form. The examiner enters the exam title, course code and title, department, opening and closing date/time, and examination timer before defining the questions.
+
+Figure 5.2 — New objective examination form: question setup
+Description: This section lets the examiner build objective questions by entering the question text, four answer options, the correct option, and marks. The examiner can add further questions and publish the completed exam to notify eligible students.
+
+Figure 6.1 — Students and examination history list
+Description: This page gives the examiner a searchable list of registered students, including email, matric number, department, and number of attempts. The “View history” action opens each student's examination record.
+
+Figure 6 — Expanded student examination history and monitoring record
+Description: This screen shows an individual student's examination history after it has been expanded. It records the exam, submission status, score, monitoring points, and detailed violation events, supporting informed examiner review.
+
+Figure 7 — Flagged students page
+Description: This page consolidates students whose examination sessions generated integrity signals. For each record, the examiner can see the student, related exam, department, accumulated risk points, and most recent detected event.
+
+Figure 8 — Examiner notification panel
+Description: The notification panel alerts the examiner to important events, including student violations and automatic submission after repeated monitoring warnings. It helps the examiner respond promptly to examination-integrity issues.
+
+Figure 9 — Student dashboard with notifications
+Description: This is the student's dashboard. It displays the number of available assessments, published-score average, and a results area; the open notification panel informs the student about new exams, approved retakes, and published scores.
+
+Figure 10 — Student “My examinations” page
+Description: This page presents the student's exam cards and their statuses, such as auto-submitted, exam taken, and retake available. It preserves examination history and communicates whether an exam can still be accessed.
+
+Figure 11 — Timed objective examination interface
+Description: This screen is the active examination workspace. It shows the exam title, countdown timer, question-progress indicator, multiple-choice options, previous/next navigation, and a question navigator while monitoring remains active.
+
+Figure 12 — In-exam monitoring warning dialog
+Description: This dialog appears when a monitored behaviour, here a right-click, is detected during an exam. It informs the student that the event was recorded for examiner review, displays the current warning count, and requires acknowledgement before continuing.

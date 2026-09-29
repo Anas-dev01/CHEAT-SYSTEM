@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
+enum Role {
+ EXAMINER
+ STUDENT
+}
+enum ExamStatus {
+ DRAFT
+ PUBLISHED
+ COMPLETED
+ ARCHIVED
+}
+enum AttemptStatus {
+ NOT_STARTED
+ IN_PROGRESS
+ SUBMITTED
+ AUTO_SUBMITTED
+}
+enum RiskLevel {
+ LOW
+ MEDIUM
+ HIGH
+ CRITICAL
+}
+enum QuestionType {
+ MULTIPLE_CHOICE
+ TRUE_FALSE
+}
+model User {
+ id String @id @default(cuid())
+ name String
+ email String @unique
+ passwordHash String
+ role Role @default(STUDENT)
+ active Boolean @default(true)
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ studentProfile StudentProfile?
+ examinerCourses Course[] @relation("CourseExaminer")
+ attempts StudentExam[] @relation("StudentAttempts")
+ notifications Notification[]
+}
+model StudentProfile {
+ id String @id @default(cuid())
+ userId String @unique
+ matricNumber String @unique
+ department String?
+ level String?
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+}
+model Course {
+ id String @id @default(cuid())
+ code String @unique
+ title String
+ description String?
+ department String
+ examinerId String?
+ createdAt DateTime @default(now())
+ examiner User? @relation("CourseExaminer",fields:[examinerId],references:[id])
+ exams Exam[]
+ questions Question[]
+}
+model Exam {
+ id String @id @default(cuid())
+ title String
+ instructions String
+ courseId String
+ status ExamStatus @default(DRAFT)
+ scheduledAt DateTime
+ closesAt DateTime
+ durationMinutes Int
+ passingScore Float @default(50)
+ fullscreenRequired Boolean @default(true)
+ copyProtection Boolean @default(true)
+ pasteProtection Boolean @default(true)
+ webcamEnabled Boolean @default(false)
+ suspicionEnabled Boolean @default(true)
+ randomQuestionOrder Boolean @default(true)
+ randomOptionOrder Boolean @default(true)
+ autoSubmitThreshold Int?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ course Course @relation(fields:[courseId],references:[id],onDelete:Cascade)
+ examQuestions ExamQuestion[]
+ attempts StudentExam[]
+}
+model Question {
+ id String @id @default(cuid())
+ text String
+ type QuestionType @default(MULTIPLE_CHOICE)
+ options String
+ correctAnswer String
+ marks Float @default(1)
+ difficulty String @default("MEDIUM")
+ courseId String
+ createdAt DateTime @default(now())
+ course Course @relation(fields:[courseId],references:[id],onDelete:Cascade)
+ examLinks ExamQuestion[]
+}
+model ExamQuestion {
+ examId String
+ questionId String
+ position Int @default(0)
+ exam Exam @relation(fields:[examId],references:[id],onDelete:Cascade)
+ question Question @relation(fields:[questionId],references:[id],onDelete:Cascade)
+ @@id([examId,questionId])
+}
+model StudentExam {
+ id String @id @default(cuid())
+ studentId String
+ examId String
+ status AttemptStatus @default(NOT_STARTED)
+ startedAt DateTime?
+ submittedAt DateTime?
+ score Float?
+ scorePublished Boolean @default(false)
+ answers Answer[]
+ violations ViolationLog[]
+ summary SuspicionSummary?
+ student User @relation("StudentAttempts",fields:[studentId],references:[id],onDelete:Cascade)
+ exam Exam @relation(fields:[examId],references:[id],onDelete:Cascade)
+ @@unique([studentId,examId])
+}
+model Answer {
+ id String @id @default(cuid())
+ attemptId String
+ questionId String
+ value String
+ isCorrect Boolean?
+ awardedMarks Float?
+ updatedAt DateTime @updatedAt
+ attempt StudentExam @relation(fields:[attemptId],references:[id],onDelete:Cascade)
+ @@unique([attemptId,questionId])
+}
+model ViolationLog {
+ id String @id @default(cuid())
+ attemptId String
+ type String
+ description String
+ points Int
+ createdAt DateTime @default(now())
+ attempt StudentExam @relation(fields:[attemptId],references:[id],onDelete:Cascade)
+}
+model SuspicionSummary {
+ id String @id @default(cuid())
+ attemptId String @unique
+ score Int @default(0)
+ riskLevel RiskLevel @default(LOW)
+ updatedAt DateTime @updatedAt
+ attempt StudentExam @relation(fields:[attemptId],references:[id],onDelete:Cascade)
+}
+model Notification {
+ id String @id @default(cuid())
+ userId String
+ title String
+ message String
+ read Boolean @default(false)
+ createdAt DateTime @default(now())
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+}

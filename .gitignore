@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment files (keep example templates)
+.env
+.env.*
+!.env.example
+!.env.*.example
+client/.env
+client/.env.*
+!client/.env.example
+server/.env
+server/.env.*
+!server/.env.example
+
+# Build output
+client/dist/
+server/dist/
+dist/
+build/
+
+# Local databases and generated Prisma artifacts
+server/prisma/*.db
+server/prisma/*.db-journal
+server/node_modules/.prisma/
+
+# Logs and test output
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+*.log
+coverage/
+
+# Editor and operating system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,13 @@
+import { PrismaClient, Role, ExamStatus, QuestionType } from '@prisma/client';
+import bcrypt from 'bcrypt';
+const db = new PrismaClient();
+const hash = await bcrypt.hash('Password123!', 12);
+const examiner = await db.user.upsert({ where:{email:'examiner@examguard.edu'}, update:{}, create:{name:'Dr. Sarah Wilson',email:'examiner@examguard.edu',passwordHash:hash,role:Role.EXAMINER} });
+const student = await db.user.upsert({ where:{email:'student@examguard.edu'}, update:{}, create:{name:'Alex Johnson',email:'student@examguard.edu',passwordHash:hash,role:Role.STUDENT,studentProfile:{create:{matricNumber:'CSC/2022/001',department:'Computer Science',level:'400'}}} });
+const course = await db.course.upsert({where:{code:'CSC401'},update:{department:'Computer Science',examinerId:examiner.id},create:{code:'CSC401',title:'Software Engineering',description:'Software design and development principles.',department:'Computer Science',examinerId:examiner.id}});
+const q1 = await db.question.create({data:{text:'Which phase defines the system requirements?',type:QuestionType.MULTIPLE_CHOICE,options:JSON.stringify(['Planning','Analysis','Testing','Deployment']),correctAnswer:'Analysis',marks:2,difficulty:'EASY',courseId:course.id}});
+const q2 = await db.question.create({data:{text:'Agile development uses iterative delivery.',type:QuestionType.TRUE_FALSE,options:JSON.stringify(['True','False']),correctAnswer:'True',marks:2,difficulty:'EASY',courseId:course.id}});
+const exam = await db.exam.create({data:{title:'Software Engineering Midterm',instructions:'Read every question carefully. Remain in fullscreen mode throughout the assessment.',courseId:course.id,status:ExamStatus.PUBLISHED,scheduledAt:new Date(Date.now()+86400000),closesAt:new Date(Date.now()+90000000),durationMinutes:45,webcamEnabled:true,examQuestions:{create:[{questionId:q1.id,position:1},{questionId:q2.id,position:2}]}}});
+await db.studentExam.upsert({where:{studentId_examId:{studentId:student.id,examId:exam.id}},update:{},create:{studentId:student.id,examId:exam.id}});
+console.log('Seeded. Examiner login: examiner@examguard.edu / Password123!');
+await db.$disconnect();
